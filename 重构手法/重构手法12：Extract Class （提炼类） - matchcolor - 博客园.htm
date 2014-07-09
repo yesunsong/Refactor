@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!-- saved from url=(0065)http://www.cnblogs.com/matchcolor/archive/2010/08/02/1785606.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script async="" src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/adsbygoogle.js"></script><script async="" src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/ga.js"></script>
+<meta charset="utf-8">
+<title>重构手法12：Extract Class （提炼类） - matchcolor - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/style.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/matchcolor/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/matchcolor/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/matchcolor/wlwmanifest.xml">
+<script async="" type="text/javascript" src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/gpt.js"></script><script src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'matchcolor', cb_enable_mathjax=false;</script>
+<script src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/blog-common.js" type="text/javascript"></script>
+<script async="" type="text/javascript" src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/pubads_impl_42.js"></script><style type="text/css">#ad_under_post_holder,div[id^="div-gpt-ad-"]{display:none !important;}</style><script type="text/javascript" src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/osd.js"></script></head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/matchcolor/"><img id="blogLogo" src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/matchcolor/">matchcolor</a></h1>
+<h2></h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="MyLinks1_HomeLink" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="MyLinks1_MyHomeLink" class="menu" href="http://www.cnblogs.com/matchcolor/">首页</a></li>
+<li><a class="menu" href="http://q.cnblogs.com/">博问</a></li>
+<li><a class="menu" href="http://home.cnblogs.com/ing/">闪存</a></li>
+<li><a id="MyLinks1_NewPostLink" class="menu" rel="nofollow" href="http://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="MyLinks1_ContactLink" class="menu" rel="nofollow" href="http://space.cnblogs.com/msg/send/matchcolor">联系</a></li>
+<li><a id="MyLinks1_Syndication" class="menu" href="http://www.cnblogs.com/matchcolor/rss">订阅</a>
+<!--<a id="MyLinks1_XMLLink" class="aHeaderXML" href="http://www.cnblogs.com/matchcolor/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="MyLinks1_Admin" class="menu" rel="nofollow" href="http://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			
+<!--done-->
+随笔- 115&nbsp;
+文章- 1&nbsp;
+评论- 6&nbsp;
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/重构手法12：Extract Class （提炼类） - matchcolor - 博客园.htm">重构手法12：Extract Class （提炼类）</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>&nbsp;</p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">某个类做了应该由2个类做的事。<strong>建立一个新类，将相关的字段和函数从旧类搬移到新类。</strong></span></p>
+<p style="text-indent: -31.5pt; margin: 0cm 0cm 0pt 52.5pt"><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">动机：一个类应该是一个清楚地抽象，处理一些明确的责任。但是在实际工作中，类会不断成长扩展。你会在这儿加入一些功能，在哪加入一些数据。给某个类添加一项新责任时，你会觉得不值得为这项责任分离出一个单独的类。于是，随着责任不断增加，这个类会变得过分复杂。很快，你的类就会变成一团乱麻。</span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt 31.5pt"><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">这样的类往往含有大量函数和数据。这样的类往往太大而不易理解。此时你需要考虑哪些部分可以分离出去，并将它们分离到一个单独的类中。如果某些数据和某些函数总是一起出现，某些数据经常同时变化甚至彼此依赖，这就表示你应该将它们分离出去。一个有用的测试就是问自己，如果搬移了某些字段和函数，会发生什么事？其他字段和函数是否因此变得无意义。</span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt 31.5pt"><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">另一个往往在开发后期出现的信号时类的子类化方式。如果你发现子类化只影响类的部分特性，或如果你发现某些特性需要以一种方式来子类化，某些特性则需要以另一种方式子类化，这就意味着你需要分解原来的类。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">做法：1、决定如何分解类所负的责任。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">、建立一个新类，用以表现从旧类中分离出来的责任。如果旧类剩下的责任与旧类名称不符，为旧类更名。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">、建立“从旧类访问新类”的连接关系。有可能需要一个双向连接。但是在真正需要它之前，不需要建立“从新类通往旧类”的连接。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">、对于你想搬移的每个字段，运用 Move Field （搬移字段）搬移之。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">、每次搬移后，编译、测试。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">、使用Move Method （搬移函数）将必要函数搬移到新类。先搬移较低层函数搬移到新类。先搬移较低层函数（也就是“被其他函数调用“ 多于 ”调用其他函数“者），再搬移较高层函数。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">、每次搬移之后，编译、测试。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;">、检查，精简每个类的接口。如果你建立起双向连接，检查是否可以将它改为单向连接。</span></p>
+<p><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;; font-size: 10.5pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9</span><span style="font-family: &#39;微软雅黑&#39;,&#39;sans-serif&#39;; font-size: 10.5pt">、决定是否公开信类。如果你的确需要公开它，就要决定让它成为引用对象还是不可变的值对象</span></p></div><div id="MySignature"><div style="display: none" id="__document_write_ajax_div-1"></div><!-- cnblogs 336 280 --><ins class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-2876867208357149" data-ad-slot="5427941423"></ins><div style="display: none" id="__document_write_ajax_div-2"></div></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/matchcolor/tag/%E9%87%8D%E6%9E%84/">重构</a></div>
+<div id="blog_post_info"><div id="green_channel">
+绿色通道：
+<a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(cb_entryId,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+<a id="green_channel_follow" onclick="c_follow();" href="javascript:void(0);">关注我</a>
+<a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a><a id="green_channel_contact" href="http://space.cnblogs.com/msg/send/matchcolor" target="_blank">与我联系</a>
+<a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/icon_weibo_24.png" alt=""></a>
+</div>
+<div id="author_profile">
+<div id="author_profile_info" class="author_profile_info">
+<a href="http://home.cnblogs.com/u/matchcolor/" target="_blank"><img src="./重构手法12：Extract Class （提炼类） - matchcolor - 博客园_files/u21442.jpg" class="author_avatar" alt=""></a>
+<div id="author_profile_detail" class="author_profile_info">
+<a href="http://home.cnblogs.com/u/matchcolor/">matchcolor</a><br>
+<a href="http://home.cnblogs.com/u/matchcolor/followees">关注 - 14</a><br>
+<a href="http://home.cnblogs.com/u/matchcolor/followers">粉丝 - 12</a>
+</div>
+</div>
+<div class="clear"></div>
+<div id="author_profile_honor"></div>
+<div id="author_profile_follow">
+    <a href="javascript:void(0);" onclick="c_follow();return false;">+加关注</a>
+</div>
+</div>
+<div id="div_digg">										
+	<div class="diggit" onclick="votePost(cb_entryId,&#39;Digg&#39;)"> 
+		<span class="diggnum" id="digg_count">0</span>
+	</div>
+	<div class="buryit" onclick="votePost(cb_entryId,&#39;Bury&#39;)"> 
+		<span class="burynum" id="bury_count">0</span>
+	</div>
+	<div class="clear"></div>	
+	<div class="diggword" id="digg_tips">
+    (请您对文章做出评价)
+    </div>	
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/02/1786362.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/matchcolor/archive/2010/08/02/1786362.html" title="发布于2010-08-02 13:35">重构手法10：Move Method （搬移函数）</a><br><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/03/1786369.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/matchcolor/archive/2010/08/03/1786369.html" title="发布于2010-08-03 06:32">重构手法13：Inline Class （将类内联化）</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2010-08-02 20:09</span> <a href="http://www.cnblogs.com/matchcolor/">matchcolor</a> 阅读(<span id="post_view_count">325</span>) 评论(<span id="post_comment_count">0</span>)  <a href="http://i.cnblogs.com/EditPosts.aspx?postid=1785606" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/matchcolor/archive/2010/08/02/1785606.html#" onclick="AddToWz(1785606);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=25001,cb_entryId=1785606,cb_blogApp=currentBlogApp,cb_blogUserGuid='d26d3d0b-63cf-dd11-9e4d-001cf0cd104b',cb_entryCreatedDate='2010/8/2 20:09:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+<a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" id="lnk_RefreshComments" onclick="return RefreshCommentList();">刷新评论</a><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/02/1785606.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/02/1785606.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="site_nav_under"><a href="http://www.cnblogs.com/" target="_blank" title="开发者的网上家园">博客园首页</a><a href="http://q.cnblogs.com/" target="_blank" title="程序员问答社区">博问</a><a href="http://news.cnblogs.com/" target="_blank" title="IT新闻">新闻</a><a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a><a href="http://job.cnblogs.com/" target="_blank">程序员招聘</a><a href="http://kb.cnblogs.com/" target="_blank">知识库</a></div>
+<div id="opt_under_post"></div>
+<script type="text/javascript">
+    var enableGoogleAd = true;var googletag = googletag || {};googletag.cmd = googletag.cmd || [];
+    fixPostBodyFormat();
+</script>
+<div id="ad_under_post_holder">
+<script type="text/javascript">
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+    (function () {
+        var gads = document.createElement('script');
+        gads.async = true;
+        gads.type = 'text/javascript';
+        var useSSL = 'https:' == document.location.protocol;
+        gads.src = (useSSL ? 'https:' : 'http:') +'//www.googletagservices.com/tag/js/gpt.js';
+        var node = document.getElementsByTagName('script')[0];
+        node.parentNode.insertBefore(gads, node);
+    })();
+</script>
+<script type="text/javascript">
+    try {
+        googletag.cmd.push(function () {
+            googletag.defineSlot('/1090369/cnblogs_blogpost_C1_sitehome', [300, 250], 'div-gpt-ad-1346480159711-0').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+    } catch (e) { }
+</script>
+<div id="google_ad_c1" class="c_ad_block">
+    <div id="div-gpt-ad-1346480159711-0" style="width:300px; height:250px;">
+    <script type="text/javascript">
+    try{
+        googletag.cmd.push(function () { googletag.display('div-gpt-ad-1346480159711-0'); });
+    } catch (e) { }
+    </script>
+    <div id="google_ads_iframe_/1090369/cnblogs_blogpost_C1_sitehome_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/cnblogs_blogpost_C1_sitehome_0" name="google_ads_iframe_/1090369/cnblogs_blogpost_C1_sitehome_0" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom;"></iframe></div><iframe id="google_ads_iframe_/1090369/cnblogs_blogpost_C1_sitehome_0__hidden__" name="google_ads_iframe_/1090369/cnblogs_blogpost_C1_sitehome_0__hidden__" width="0" height="0" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" src="javascript:"<html><body style='background:transparent'></body></html>"" style="border: 0px; vertical-align: bottom; visibility: hidden; display: none;"></iframe></div>
+</div>
+</div>
+<div id="blog_news_kb"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/212714/" target="_blank">谷歌两创始人同台受访说了啥</a><br> ·  <a href="http://news.cnblogs.com/n/212713/" target="_blank">雅虎地图导航走浪漫路线：不选最短选最美</a><br> ·  <a href="http://news.cnblogs.com/n/212712/" target="_blank">9158创始人发内部邮件《致每一位天鸽人》</a><br> ·  <a href="http://news.cnblogs.com/n/212711/" target="_blank">宇宙或许存在于一个广阔的黑洞里</a><br> ·  <a href="http://news.cnblogs.com/n/212709/" target="_blank">哈利波特主题公园“对角巷”正式开放！</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/211942/" target="_blank">让我们再聊聊浏览器资源加载优化</a><br> ·  <a href="http://kb.cnblogs.com/page/212281/" target="_blank">开源软件许可协议简介</a><br> ·  <a href="http://kb.cnblogs.com/page/211867/" target="_blank">程序员的自我修养(2)——计算机网络</a><br> ·  <a href="http://kb.cnblogs.com/page/188386/" target="_blank">你是否中了工程师文化的毒？</a><br> ·  <a href="http://kb.cnblogs.com/page/187094/" target="_blank">不安分的工程师</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+$(function () {
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    $.ajax({ url: 'http://counter.cnblogs.com/blog/post/' + cb_entryId, type: 'get', dataType: 'script', cache: true });
+});
+</script>
+</div>
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/matchcolor/">matchcolor</a><br>园龄：<a href="http://home.cnblogs.com/u/matchcolor/" title="入园时间：2007-03-09">7年4个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/matchcolor/followers/">12</a><br>关注：<a href="http://home.cnblogs.com/u/matchcolor/followees/">14</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="cnblogs.UserManager.FollowBlogger(&#39;d26d3d0b-63cf-dd11-9e4d-001cf0cd104b&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="日历">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2010/07/01&#39;);return false;">&lt;</a></td><td align="center">2010年8月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2010/09/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">25</td><td class="CalOtherMonthDay" align="center">26</td><td class="CalOtherMonthDay" align="center">27</td><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td></tr><tr><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/01.html"><u>1</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/02.html"><u>2</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/03.html"><u>3</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/04.html"><u>4</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/05.html"><u>5</u></a></td><td align="center">6</td><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/07.html"><u>7</u></a></td></tr><tr><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/08.html"><u>8</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/09.html"><u>9</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/10.html"><u>10</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/11.html"><u>11</u></a></td><td align="center"><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/12.html"><u>12</u></a></td><td align="center">13</td><td class="CalWeekendDay" align="center">14</td></tr><tr><td class="CalWeekendDay" align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td align="center">20</td><td class="CalWeekendDay" align="center">21</td></tr><tr><td class="CalWeekendDay" align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td align="center">27</td><td class="CalWeekendDay" align="center">28</td></tr><tr><td class="CalWeekendDay" align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn">
+<div class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+
+
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/matchcolor/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/matchcolor/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/matchcolor/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/matchcolor/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/matchcolor/tag/" title="我的博客的标签列表">我的标签</a></li>
+<li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="http://www.cnblogs.com/matchcolor/archive/2010/08/02/1785606.html#">更多链接</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div>
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/matchcolor/tag/%E9%87%8D%E6%9E%84/">重构</a>(92)</li>
+</ul>
+</div>
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/matchcolor/category/256851.html">.NET/C#/Asp.net(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/matchcolor/category/256800.html">Javascript/JQuery(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/matchcolor/category/256850.html">Silverlight/WPF/WindowsPhone (4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/matchcolor/category/256849.html">程序人生(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/matchcolor/category/276938.html">领域驱动设计(DDD)(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/matchcolor/category/255913.html">重构 改善既有代码的设计(3)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/matchcolor/archive/2011/05.html">2011年5月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/matchcolor/archive/2011/04.html">2011年4月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/matchcolor/archive/2011/03.html">2011年3月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/matchcolor/archive/2011/02.html">2011年2月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/matchcolor/archive/2011/01.html">2011年1月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/matchcolor/archive/2010/12.html">2010年12月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/matchcolor/archive/2010/08.html">2010年8月 (87)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/matchcolor/archive/2010/07.html">2010年7月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/matchcolor/archive/2010/06.html">2010年6月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/matchcolor/archive/2010/05.html">2010年5月 (1)</a> </li>
+
+</ul>
+
+</div>
+
+<div id="recent_comments_wrap" style="display: none;">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"></div>
+</div>
+</div><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/matchcolor/archive/2011/03/18/1987198.html">1. jquery Ajax 实现加载数据前动画效果(1090)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/06/13/1757893.html">2. 在C#单元测试中使用HttpContext的简单解决办法(1089)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/08/1786423.html">3. 重构手法38：Replace Nested Conditional with Guard Clauses （以卫语句取代嵌套条件表达式）(832)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/01/1785593.html">4. 重构手法01：Extract Method （提炼函数）(662)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/06/13/1757990.html">5. jQuery UI 1.7 中文文档(656)</a></li></ul></div>
+</div>
+</div><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/05/29/1747092.html">1. 程序员应知——破窗与童子军军规 转载(1)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/06/20/1761466.html">2. Silverlight中的资源路径(1)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/09/1786429.html">3. 重构手法44：Remove Parameter （移除参数）(1)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/08/05/1786412.html">4. 重构手法30：Replace Type Code with Class （以类取代类型码）(1)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2011/05/15/2046957.html">5. 开发架构的演化(1)</a></li></ul></div>
+</div>
+</div><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/matchcolor/archive/2011/05/15/2046957.html">1. 开发架构的演化(2)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2011/01/18/1938001.html">2. 关于领域驱动设计（DDD）的理论知识(1)</a></li><li><a href="http://www.cnblogs.com/matchcolor/archive/2010/06/13/1757893.html">3. 在C#单元测试中使用HttpContext的简单解决办法(1)</a></li></ul></div>
+</div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2014 matchcolor
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>
